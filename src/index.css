@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0b0b0b;
+  --panel: rgba(18, 18, 18, 0.6);
+  --accent: #ff4500;
+  --cyan: #ffb700;
+  --text: #eaeaea;
+  --muted: #9a9a9a;
+  --border: rgba(255, 255, 255, 0.1);
+  --glass: blur(12px);
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-text font-body overflow-x-hidden min-h-screen selection:bg-accent selection:text-black;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-panel backdrop-blur-md border border-border;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* ===== CRT EFFECTS ===== */
+.scanlines {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.02),
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px,
+      transparent 3px);
+  mix-blend-mode: overlay;
+  z-index: 999;
+}
+
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.06;
+  z-index: 1000;
+}
