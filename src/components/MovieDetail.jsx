@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { getImageUrl, getMovieDetails } from '../services/tmdb';
-import { Play, ArrowLeft, Star, Clock, Calendar, ExternalLink } from 'lucide-react';
+import { Play, ArrowLeft, Star, Clock, Calendar, ExternalLink, Bookmark, Check, X } from 'lucide-react';
+import { useMovieContext } from '../context/MovieContext';
+
+
 
 const MovieDetail = ({ movieId, onBack, onSelectPerson }) => {
     const [movie, setMovie] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [showTrailer, setShowTrailer] = useState(false);
+    const { toggleWatchlist, isInWatchlist, toggleWatched, isWatched } = useMovieContext();
 
     useEffect(() => {
         const fetchDetails = async () => {
             setLoading(true);
+            setShowTrailer(false); // Reset trailer when changing movies
             try {
                 const data = await getMovieDetails(movieId);
                 setMovie(data);
@@ -19,6 +25,7 @@ const MovieDetail = ({ movieId, onBack, onSelectPerson }) => {
         };
         fetchDetails();
     }, [movieId]);
+
 
     if (loading) {
         return (
@@ -31,14 +38,14 @@ const MovieDetail = ({ movieId, onBack, onSelectPerson }) => {
     if (!movie) return null;
 
     const trailer = movie.videos?.results?.find(v => v.site === 'YouTube' && v.type === 'Trailer');
-    const trailerUrl = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : null;
+    const trailerKey = trailer?.key;
 
-    const openTrailer = () => {
-        if (trailerUrl) window.open(trailerUrl, '_blank');
-    };
+    const inWatchlist = isInWatchlist(movie.id);
+    const watched = isWatched(movie.id);
 
     const getCast = () => movie.credits?.cast?.slice(0, 3) || [];
     const getCrew = (job) => movie.credits?.crew?.filter(c => c.job === job) || [];
+
 
     return (
         <div className="animate-in fade-in duration-700 container mx-auto px-4 py-8 max-w-6xl relative z-10">
@@ -80,13 +87,55 @@ const MovieDetail = ({ movieId, onBack, onSelectPerson }) => {
                         <span className="text-xl text-muted pb-1">/ 10</span>
                     </div>
 
-                    {trailerUrl && (
+                    {/* Action Buttons */}
+                    <div className="flex flex-wrap gap-4 mb-8">
+                        {trailerKey && (
+                            <button
+                                onClick={() => setShowTrailer(!showTrailer)}
+                                className="px-8 py-3 border border-accent text-accent font-display text-xl hover:bg-accent hover:text-black hover:shadow-[0_0_20px_var(--accent)] transition-all duration-300 flex items-center gap-3 group"
+                            >
+                                {showTrailer ? <X size={20} /> : <Play size={20} className="fill-current" />}
+                                {showTrailer ? 'CLOSE_TRAILER' : 'PLAY_TRAILER'}
+                            </button>
+                        )}
+
                         <button
-                            onClick={openTrailer}
-                            className="self-start px-8 py-3 border border-accent text-accent font-display text-2xl hover:bg-accent hover:text-black hover:shadow-[0_0_20px_var(--accent)] transition-all duration-300 flex items-center gap-3 group"
+                            onClick={() => toggleWatchlist(movie)}
+                            className={`px-6 py-3 border font-display text-xl transition-all duration-300 flex items-center gap-3 ${inWatchlist
+                                ? 'border-cyan text-cyan hover:bg-cyan hover:text-black'
+                                : 'border-white/30 text-white hover:border-cyan hover:text-cyan'
+                                }`}
                         >
-                            <Play size={20} className="fill-current" /> PLAY_TRAILER
+                            <Bookmark size={20} className={inWatchlist ? 'fill-current' : ''} />
+                            {inWatchlist ? 'IN_WATCHLIST' : 'ADD_TO_WATCHLIST'}
                         </button>
+
+                        <button
+                            onClick={() => toggleWatched(movie)}
+                            className={`px-6 py-3 border font-display text-xl transition-all duration-300 flex items-center gap-3 ${watched
+                                ? 'border-green-500 text-green-500 hover:bg-green-500 hover:text-black'
+                                : 'border-white/30 text-white hover:border-green-500 hover:text-green-500'
+                                }`}
+                        >
+                            <Check size={20} />
+                            {watched ? 'WATCHED' : 'MARK_AS_WATCHED'}
+                        </button>
+                    </div>
+
+                    {/* Embedded Trailer */}
+                    {showTrailer && trailerKey && (
+                        <div className="mb-8 glass-panel p-2 border border-cyan/50 shadow-[0_0_30px_rgba(0,255,225,0.3)]">
+                            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                                <iframe
+                                    className="absolute top-0 left-0 w-full h-full"
+                                    src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
+                                    title="Movie Trailer"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                ></iframe>
+                            </div>
+                        </div>
                     )}
 
                     <div className="mt-10 glass-panel p-8 relative overflow-hidden">

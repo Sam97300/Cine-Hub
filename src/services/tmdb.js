@@ -18,7 +18,16 @@ export const searchMovies = async (query) => {
   return response.data.results;
 };
 
+export const searchMoviesAutocomplete = async (query) => {
+  if (!query || query.trim().length < 2) return [];
+  const response = await tmdb.get('/search/movie', {
+    params: { query },
+  });
+  return response.data.results.slice(0, 6); // Limit to 6 results for autocomplete
+};
+
 export const getMovieDetails = async (id) => {
+
   const response = await tmdb.get(`/movie/${id}`, {
     params: {
       append_to_response: 'credits,videos',

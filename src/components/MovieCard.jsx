@@ -1,7 +1,17 @@
 import React from 'react';
 import { getImageUrl } from '../services/tmdb';
+import { Bookmark } from 'lucide-react';
+import { useMovieContext } from '../context/MovieContext';
 
 const MovieCard = ({ movie, onClick }) => {
+    const { toggleWatchlist, isInWatchlist } = useMovieContext();
+    const inWatchlist = isInWatchlist(movie.id);
+
+    const handleWatchlistClick = (e) => {
+        e.stopPropagation();
+        toggleWatchlist(movie);
+    };
+
     return (
         <div
             onClick={() => onClick(movie)}
@@ -16,6 +26,18 @@ const MovieCard = ({ movie, onClick }) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                     <span className="text-accent font-display text-xl tracking-widest">VIEW DATA</span>
                 </div>
+
+                {/* Watchlist Button */}
+                <button
+                    onClick={handleWatchlistClick}
+                    className={`absolute top-2 right-2 p-2 backdrop-blur-md border transition-all duration-300 ${inWatchlist
+                            ? 'bg-cyan/20 border-cyan text-cyan'
+                            : 'bg-black/40 border-white/20 text-white/60 hover:border-cyan hover:text-cyan'
+                        }`}
+                    title={inWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
+                >
+                    <Bookmark size={18} className={inWatchlist ? 'fill-current' : ''} />
+                </button>
             </div>
 
             <div className="p-4">

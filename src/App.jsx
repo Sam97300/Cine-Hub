@@ -3,13 +3,17 @@ import { searchMovies, getTrendingMovies } from './services/tmdb';
 import MovieCard from './components/MovieCard';
 import MovieDetail from './components/MovieDetail';
 import PersonDetail from './components/PersonDetail';
-import { Search, Film } from 'lucide-react';
+import Profile from './components/Profile';
+import SearchAutocomplete from './components/SearchAutocomplete';
+import { Search, Film, User } from 'lucide-react';
+
+
 
 function App() {
-  const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
   const [selectedMovieId, setSelectedMovieId] = useState(null);
   const [selectedPersonId, setSelectedPersonId] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -27,28 +31,18 @@ function App() {
     setLoading(false);
   };
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!query.trim()) return loadTrending();
-
-    setLoading(true);
-    setSelectedMovieId(null);
-    setSelectedPersonId(null);
-    try {
-      const results = await searchMovies(query);
-      setMovies(results);
-    } catch (e) {
-      console.error(e);
-    }
-    setLoading(false);
+  const handleMovieSelect = (movieId) => {
+    setSelectedMovieId(movieId);
+    setShowProfile(false);
   };
 
   const goHome = () => {
     setSelectedMovieId(null);
     setSelectedPersonId(null);
-    setQuery('');
+    setShowProfile(false);
     loadTrending();
   };
+
 
   return (
     <div className="min-h-screen text-text font-body selection:bg-accent selection:text-black">
@@ -56,7 +50,7 @@ function App() {
       <div className="grain"></div>
 
       {/* Header */}
-      {!selectedMovieId && !selectedPersonId && (
+      {!selectedMovieId && !selectedPersonId && !showProfile && (
         <header className="sticky top-0 z-50 py-4 backdrop-blur-md border-b border-white/5 bg-black/50">
           <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
             <div
@@ -67,22 +61,30 @@ function App() {
               <span className='tracking-widest'>CINEHUB</span>
             </div>
 
-            <form onSubmit={handleSearch} className="relative w-full md:w-96 group">
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="SEARCH_DATABASE..."
-                className="w-full bg-black/40 border border-white/10 rounded-none px-4 py-2 pl-10 font-mono text-sm text-cyan focus:outline-none focus:border-cyan focus:shadow-[0_0_15px_rgba(0,255,225,0.2)] transition-all"
-              />
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-cyan w-4 h-4" />
-            </form>
+            <div className="flex items-center gap-4 w-full md:w-auto">
+              <SearchAutocomplete onSelectMovie={handleMovieSelect} />
+
+              <button
+                onClick={() => setShowProfile(true)}
+                className="px-4 py-2 border border-white/10 text-muted hover:border-cyan hover:text-cyan transition-all flex items-center gap-2 font-display text-sm tracking-wider"
+                title="View Profile"
+              >
+                <User size={18} />
+                <span className="hidden md:inline">PROFILE</span>
+              </button>
+            </div>
           </div>
         </header>
       )}
 
+
       <main className="container mx-auto px-4 py-8 relative z-10">
-        {selectedPersonId ? (
+        {showProfile ? (
+          <Profile
+            onBack={() => setShowProfile(false)}
+            onSelectMovie={handleMovieSelect}
+          />
+        ) : selectedPersonId ? (
           <PersonDetail
             personId={selectedPersonId}
             onBack={() => setSelectedPersonId(null)}
@@ -102,7 +104,7 @@ function App() {
             <div className="flex items-center gap-2 mb-8">
               <div className="h-1 w-1 bg-accent rounded-full animate-ping"></div>
               <h2 className="font-display text-2xl text-muted tracking-wider">
-                {query ? `RESULTS_FOR: "${query.toUpperCase()}"` : 'TRENDING_DATA_STREAM'}
+                TRENDING_DATA_STREAM
               </h2>
             </div>
 
