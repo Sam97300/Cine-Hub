@@ -51,130 +51,169 @@ const MovieDetail = ({ movieId, onBack, onSelectPerson }) => {
 
 
     return (
-        <div className="animate-in fade-in duration-700 relative z-10">
-            {/* Backdrop Header */}
-            <div className="absolute top-0 left-0 w-full h-[70vh] -z-10 overflow-hidden opacity-30 mask-image-gradient">
+        <div className="animate-in fade-in duration-700 relative z-10 w-full min-h-screen">
+            {/* Backdrop Header - Letterboxd Style */}
+            <div className="absolute top-0 left-0 w-full h-[85vh] -z-10 overflow-hidden opacity-60 mask-image-gradient">
                 <img
-                    src={getImageUrl(movie.backdrop_path)}
+                    src={getImageUrl(movie.backdrop_path, 'original')}
                     alt="Backdrop"
-                    className="w-full h-full object-cover blur-sm"
+                    className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/60 to-black"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0b] via-[#0b0b0b]/60 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0b0b0b]/80 via-transparent to-[#0b0b0b]/80"></div>
+                {/* Grain overlay for texture */}
+                <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'url("https://grainy-gradients.vercel.app/noise.svg")' }}></div>
             </div>
 
-            <div className="container mx-auto px-4 py-8 max-w-6xl">
+            <div className="container mx-auto px-6 py-8 max-w-7xl pt-[30vh]">
                 <button
                     onClick={onBack}
-                    className="mb-8 flex items-center gap-2 text-muted hover:text-cyan transition-colors font-display text-xl"
+                    className="mb-8 flex items-center gap-2 text-white/70 hover:text-white transition-colors font-display text-xl backdrop-blur-sm px-4 py-2 rounded-full bg-black/20 hover:bg-black/40 border border-white/10"
                 >
-                    <ArrowLeft size={20} /> RETURN_TO_GRID
+                    <ArrowLeft size={20} /> RETURN
                 </button>
 
-                <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-12 items-start">
-                    {/* Poster Section - REDUCED SIZE (md:max-w-xs) */}
-                    <div className="relative group md:max-w-xs mx-auto md:mx-0 w-full">
-                        <div className="absolute -inset-1 bg-gradient-to-br from-accent to-cyan opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
+                <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-12 items-end mb-16">
+                    {/* Poster Section */}
+                    <div className="hidden lg:block relative group w-full shrink-0">
+                        <div className="absolute -inset-2 bg-gradient-to-br from-amber-600 to-indigo-900 opacity-30 blur-2xl group-hover:opacity-50 transition-opacity"></div>
                         <img
                             src={getImageUrl(movie.poster_path)}
                             alt={movie.title}
-                            className="relative w-full border border-border glass-panel pointer-events-none"
+                            className="relative w-full rounded-sm shadow-2xl shadow-black/80 border border-white/10"
                         />
                     </div>
 
                     {/* Info Section */}
-                    <div className="flex flex-col justify-start pt-4">
-                        <h1 className="font-display text-6xl md:text-7xl tracking-wide text-white mb-2 relative" style={{ textShadow: '0 0 10px rgba(255, 69, 0, 0.5)' }}>
+                    <div className="flex flex-col justify-end">
+                        <h1 className="font-display text-6xl md:text-8xl tracking-tight text-white mb-4 drop-shadow-lg leading-none">
                             {movie.title.toUpperCase()}
                         </h1>
 
-                        <div className="flex items-center gap-6 text-muted mb-8 font-mono text-sm tracking-wider flex-wrap">
-                            <span className='flex items-center gap-2'><Calendar size={14} /> {movie.release_date?.split('-')[0]}</span>
-                            <span>•</span>
-                            <span>{movie.genres?.map(g => g.name).join(' / ')}</span>
-                            <span>•</span>
-                            <span className='flex items-center gap-2'><Clock size={14} /> {movie.runtime} MIN</span>
+                        <div className="flex flex-wrap items-center gap-4 text-white/80 mb-8 font-mono text-sm tracking-wider">
+                            <span className='flex items-center gap-2 bg-white/10 px-3 py-1 rounded'><Calendar size={14} /> {movie.release_date?.split('-')[0]}</span>
+
+                            <div className="flex gap-2">
+                                {movie.genres?.map((g, i) => {
+                                    // Earthy/Royal Palette Assignment
+                                    const colors = [
+                                        'bg-emerald-900/80 border-emerald-700/50 text-emerald-100', // Earthy Green
+                                        'bg-amber-900/80 border-amber-700/50 text-amber-100',     // Royal Gold/Brown
+                                        'bg-indigo-900/80 border-indigo-700/50 text-indigo-100',   // Royal Blue
+                                        'bg-rose-900/80 border-rose-700/50 text-rose-100',       // Deep Red
+                                        'bg-slate-800/80 border-slate-600/50 text-slate-200'      // Neutral
+                                    ];
+                                    const style = colors[i % colors.length];
+                                    return (
+                                        <span key={g.id} className={`px-3 py-1 rounded border ${style} backdrop-blur-md`}>
+                                            {g.name}
+                                        </span>
+                                    );
+                                })}
+                            </div>
+
+                            <span className='flex items-center gap-2 bg-white/10 px-3 py-1 rounded'><Clock size={14} /> {movie.runtime} MIN</span>
                         </div>
 
-                        <div className="flex items-end gap-2 mb-8 font-display">
-                            <span className="text-accent text-3xl">RATING:</span>
-                            <span className="text-4xl text-cyan">{movie.vote_average?.toFixed(1)}</span>
-                            <span className="text-xl text-muted pb-1">/ 10</span>
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="flex flex-wrap gap-4 mb-8">
+                        {/* Action Buttons Row */}
+                        <div className="flex flex-wrap gap-4 mb-4">
                             {trailerKey && (
                                 <button
                                     onClick={() => setShowTrailer(!showTrailer)}
-                                    className="px-8 py-3 border border-accent text-accent font-display text-xl hover:bg-accent hover:text-black hover:shadow-[0_0_20px_var(--accent)] transition-all duration-300 flex items-center gap-3 group"
+                                    className="px-6 py-3 bg-white text-black font-display text-xl hover:bg-gray-200 transition-all duration-300 flex items-center gap-3 rounded-sm"
                                 >
                                     {showTrailer ? <X size={20} /> : <Play size={20} className="fill-current" />}
-                                    {showTrailer ? 'CLOSE_TRAILER' : 'PLAY_TRAILER'}
+                                    {showTrailer ? 'CLOSE' : 'TRAILER'}
                                 </button>
                             )}
 
                             <button
                                 onClick={() => toggleWatchlist(movie)}
-                                className={`px-6 py-3 border font-display text-xl transition-all duration-300 flex items-center gap-3 ${inWatchlist
-                                    ? 'border-cyan text-cyan hover:bg-cyan hover:text-black'
-                                    : 'border-white/30 text-white hover:border-cyan hover:text-cyan'
+                                className={`px-6 py-3 border font-display text-xl transition-all duration-300 flex items-center gap-3 rounded-sm ${inWatchlist
+                                    ? 'bg-amber-500 border-amber-500 text-black hover:bg-amber-400'
+                                    : 'bg-black/40 border-white/20 text-white hover:bg-white/10 backdrop-blur-md'
                                     }`}
                             >
                                 <Bookmark size={20} className={inWatchlist ? 'fill-current' : ''} />
-                                {inWatchlist ? 'IN_WATCHLIST' : 'ADD_TO_WATCHLIST'}
+                                {inWatchlist ? 'WATCHLISTED' : 'WATCHLIST'}
                             </button>
 
                             <button
                                 onClick={() => toggleWatched(movie)}
-                                className={`px-6 py-3 border font-display text-xl transition-all duration-300 flex items-center gap-3 ${watched
-                                    ? 'border-green-500 text-green-500 hover:bg-green-500 hover:text-black'
-                                    : 'border-white/30 text-white hover:border-green-500 hover:text-green-500'
+                                className={`px-6 py-3 border font-display text-xl transition-all duration-300 flex items-center gap-3 rounded-sm ${watched
+                                    ? 'bg-emerald-600 border-emerald-600 text-white hover:bg-emerald-500'
+                                    : 'bg-black/40 border-white/20 text-white hover:bg-white/10 backdrop-blur-md'
                                     }`}
                             >
                                 <Check size={20} />
-                                {watched ? 'WATCHED' : 'MARK_AS_WATCHED'}
+                                {watched ? 'WATCHED' : 'LOG'}
                             </button>
 
                             <button
                                 onClick={() => toggleFavorite(movie)}
-                                className={`px-4 py-3 border font-display text-xl transition-all duration-300 flex items-center justify-center gap-3 ${favorited
-                                    ? 'border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-black'
-                                    : 'border-white/30 text-white hover:border-pink-500 hover:text-pink-500'
+                                className={`px-4 py-3 border font-display text-xl transition-all duration-300 flex items-center justify-center gap-3 rounded-sm ${favorited
+                                    ? 'bg-rose-600 border-rose-600 text-white hover:bg-rose-500'
+                                    : 'bg-black/40 border-white/20 text-white hover:bg-white/10 backdrop-blur-md'
                                     }`}
-                                title="Add to Favorites"
                             >
                                 <Heart size={20} className={favorited ? 'fill-current' : ''} />
                             </button>
                         </div>
 
-                        {/* Watch Providers */}
-                        {watchProviders.length > 0 && (
-                            <div className="mb-8">
-                                <h3 className="font-display text-lg text-muted mb-3 flex items-center gap-2">
-                                    <span className="w-1 h-4 bg-accent"></span>
-                                    WHERE_TO_WATCH
-                                </h3>
-                                <div className="flex flex-wrap gap-4">
-                                    {watchProviders.map(provider => (
-                                        <div key={provider.provider_id} className="relative group" title={provider.provider_name}>
-                                            <img
-                                                src={getImageUrl(provider.logo_path)}
-                                                alt={provider.provider_name}
-                                                className="w-12 h-12 rounded-lg border border-white/10 group-hover:border-accent transition-colors cursor-pointer"
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
+                        <div className="flex items-end gap-2 font-display mb-8 opacity-80">
+                            <span className="text-amber-500 text-2xl">TMDB</span>
+                            <span className="text-3xl text-white">{movie.vote_average?.toFixed(1)}</span>
+                            <span className="text-lg text-white/50 pb-1">/ 10</span>
+                        </div>
+
+                        <div className="prose prose-invert max-w-3xl">
+                            <p className="text-white/80 text-lg leading-relaxed font-serif tracking-wide text-pretty">
+                                {movie.overview}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Content Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pt-12 border-t border-white/10">
+                    {/* Key Staff & Info */}
+                    <div className="space-y-8">
+                        <div>
+                            <h3 className="font-display text-xl text-amber-500/80 mb-3 tracking-widest">DIRECTOR</h3>
+                            <div className="flex flex-wrap gap-2">
+                                {getCrew('Director').map(c => (
+                                    <span key={c.id} onClick={() => onSelectPerson(c.id)} className="text-white hover:text-amber-400 cursor-pointer transition-colors border-b border-transparent hover:border-amber-400">
+                                        {c.name}
+                                    </span>
+                                ))}
                             </div>
-                        )}
+                        </div>
+                        <div>
+                            <h3 className="font-display text-xl text-amber-500/80 mb-3 tracking-widest">CAST</h3>
+                            <div className="flex flex-col gap-2">
+                                {getCast().map(c => (
+                                    <span key={c.id} onClick={() => onSelectPerson(c.id)} className="text-white/80 hover:text-amber-400 cursor-pointer transition-colors truncate">
+                                        {c.name}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                        <div>
+                            <h3 className="font-display text-xl text-amber-500/80 mb-3 tracking-widest">SPECS</h3>
+                            <div className="space-y-1 text-sm text-white/60">
+                                <p>Language: {movie.original_language?.toUpperCase()}</p>
+                                <p>Status: {movie.status}</p>
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Embedded Trailer */}
-                    {showTrailer && trailerKey && (
-                        <div className="mb-8 glass-panel p-2 border border-cyan/50 shadow-[0_0_30px_rgba(0,255,225,0.3)]">
-                            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                    {/* Media & Clips Section */}
+                    <div className="md:col-span-2 space-y-12">
+                        {/* Embedded Trailer Player */}
+                        {showTrailer && trailerKey && (
+                            <div className="w-full aspect-video bg-black rounded-lg overflow-hidden border border-white/20 shadow-2xl">
                                 <iframe
-                                    className="absolute top-0 left-0 w-full h-full"
+                                    className="w-full h-full"
                                     src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
                                     title="Movie Trailer"
                                     frameBorder="0"
@@ -182,63 +221,60 @@ const MovieDetail = ({ movieId, onBack, onSelectPerson }) => {
                                     allowFullScreen
                                 ></iframe>
                             </div>
-                        </div>
-                    )}
+                        )}
 
-                    <div className="mt-10 glass-panel p-8 relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-accent/50"></div>
-                        <h3 className="font-display text-2xl text-accent mb-4 tracking-widest">PLOT_SUMMARY</h3>
-                        <p className="text-muted leading-relaxed max-w-2xl text-lg">
-                            {movie.overview}
-                        </p>
+                        {/* Clips Row */}
+                        {movie.videos?.results?.length > 0 && (
+                            <div>
+                                <h3 className="font-display text-2xl text-white mb-6 flex items-center gap-3">
+                                    <span className="w-8 h-[2px] bg-amber-500"></span>
+                                    MEDIA_CLIPS
+                                </h3>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {movie.videos.results.slice(0, 6).map(video => (
+                                        <div key={video.id} className="group relative aspect-video bg-black/50 rounded overflow-hidden border border-white/5 hover:border-amber-500/50 transition-all cursor-pointer">
+                                            <img
+                                                src={`https://img.youtube.com/vi/${video.key}/mqdefault.jpg`}
+                                                alt={video.name}
+                                                className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity"
+                                            />
+                                            <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors flex items-center justify-center">
+                                                <Play size={32} className="text-white opacity-80 group-hover:scale-110 transition-transform" />
+                                            </div>
+                                            <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black to-transparent">
+                                                <p className="text-xs text-white/90 truncate font-mono">{video.type}</p>
+                                            </div>
+                                            {/* Clicking this would ideally play the video - simplified for now */}
+                                            <a href={`https://www.youtube.com/watch?v=${video.key}`} target="_blank" rel="noreferrer" className="absolute inset-0 z-10"></a>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Watch Providers */}
+                        {watchProviders.length > 0 && (
+                            <div>
+                                <h3 className="font-display text-2xl text-white mb-6 flex items-center gap-3">
+                                    <span className="w-8 h-[2px] bg-emerald-500"></span>
+                                    STREAMING_ON
+                                </h3>
+                                <div className="flex flex-wrap gap-4">
+                                    {watchProviders.map(provider => (
+                                        <div key={provider.provider_id} className="relative group" title={provider.provider_name}>
+                                            <img
+                                                src={getImageUrl(provider.logo_path)}
+                                                alt={provider.provider_name}
+                                                className="w-12 h-12 rounded-lg border border-white/10 group-hover:border-emerald-500 group-hover:scale-110 transition-all cursor-pointer"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                     </div>
                 </div>
-            </div>
-
-            {/* Details Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
-                <div className="glass-panel p-5 hover:bg-white/5 transition-colors border-l border-border hover:border-l-accent">
-                    <h4 className="text-xs text-accent tracking-widest mb-2 font-bold uppercase">Director</h4>
-                    <div className="flex flex-col gap-1">
-                        {getCrew('Director').map(c => (
-                            <span
-                                key={c.id}
-                                onClick={() => onSelectPerson(c.id)}
-                                className="text-white hover:text-cyan cursor-pointer transition-colors"
-                            >
-                                {c.name}
-                            </span>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="glass-panel p-5 hover:bg-white/5 transition-colors border-l border-border hover:border-l-accent">
-                    <h4 className="text-xs text-accent tracking-widest mb-2 font-bold uppercase">Cast</h4>
-                    <div className="flex flex-col gap-1">
-                        {getCast().map(c => (
-                            <span
-                                key={c.id}
-                                onClick={() => onSelectPerson(c.id)}
-                                className="text-white hover:text-cyan cursor-pointer transition-colors"
-                            >
-                                {c.name}
-                            </span>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="glass-panel p-5 border-l border-border hover:border-l-accent">
-                    <h4 className="text-xs text-accent tracking-widest mb-2 font-bold max-w-full">ORIGINAL LANGUAGE</h4>
-                    <p className="text-white">{movie.original_language?.toUpperCase()}</p>
-                </div>
-                <div className="glass-panel p-5 border-l border-border hover:border-l-accent">
-                    <h4 className="text-xs text-accent tracking-widest mb-2 font-bold">STATUS</h4>
-                    <p className="text-white">{movie.status?.toUpperCase()}</p>
-                </div>
-            </div>
-
-            <div className="mt-20 text-center font-display text-xl text-muted tracking-[0.2em] opacity-50">
-                ⌁ ARCHIVED IN NEON MEMORY ⌁
             </div>
         </div>
     );
