@@ -241,7 +241,6 @@ const MovieDetail = ({ movieId, onBack, onSelectPerson }) => {
                 ⌁ ARCHIVED IN NEON MEMORY ⌁
             </div>
         </div>
-        </div >
     );
 };
 
