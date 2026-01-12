@@ -31,8 +31,8 @@ const MovieCard = ({ movie, onClick }) => {
                 <button
                     onClick={handleWatchlistClick}
                     className={`absolute top-2 right-2 p-2 backdrop-blur-md border transition-all duration-300 ${inWatchlist
-                            ? 'bg-cyan/20 border-cyan text-cyan'
-                            : 'bg-black/40 border-white/20 text-white/60 hover:border-cyan hover:text-cyan'
+                        ? 'bg-cyan/20 border-cyan text-cyan'
+                        : 'bg-black/40 border-white/20 text-white/60 hover:border-cyan hover:text-cyan'
                         }`}
                     title={inWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
                 >

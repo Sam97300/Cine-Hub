@@ -30,7 +30,7 @@ export const getMovieDetails = async (id) => {
 
   const response = await tmdb.get(`/movie/${id}`, {
     params: {
-      append_to_response: 'credits,videos',
+      append_to_response: 'credits,videos,watch/providers',
     },
   });
   return response.data;

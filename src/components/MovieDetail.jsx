@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getImageUrl, getMovieDetails } from '../services/tmdb';
-import { Play, ArrowLeft, Star, Clock, Calendar, ExternalLink, Bookmark, Check, X } from 'lucide-react';
+import { Play, ArrowLeft, Star, Clock, Calendar, ExternalLink, Bookmark, Check, X, Heart } from 'lucide-react';
 import { useMovieContext } from '../context/MovieContext';
 
 
@@ -9,7 +9,7 @@ const MovieDetail = ({ movieId, onBack, onSelectPerson }) => {
     const [movie, setMovie] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showTrailer, setShowTrailer] = useState(false);
-    const { toggleWatchlist, isInWatchlist, toggleWatched, isWatched } = useMovieContext();
+    const { toggleWatchlist, isInWatchlist, toggleWatched, isMovieWatched, toggleFavorite, isFavorite } = useMovieContext();
 
     useEffect(() => {
         const fetchDetails = async () => {
@@ -41,85 +41,132 @@ const MovieDetail = ({ movieId, onBack, onSelectPerson }) => {
     const trailerKey = trailer?.key;
 
     const inWatchlist = isInWatchlist(movie.id);
-    const watched = isWatched(movie.id);
+    const watched = isMovieWatched(movie.id);
+    const favorited = isFavorite(movie.id);
+
+    const watchProviders = movie['watch/providers']?.results?.US?.flatrate || [];
 
     const getCast = () => movie.credits?.cast?.slice(0, 3) || [];
     const getCrew = (job) => movie.credits?.crew?.filter(c => c.job === job) || [];
 
 
     return (
-        <div className="animate-in fade-in duration-700 container mx-auto px-4 py-8 max-w-6xl relative z-10">
-            <button
-                onClick={onBack}
-                className="mb-8 flex items-center gap-2 text-muted hover:text-cyan transition-colors font-display text-xl"
-            >
-                <ArrowLeft size={20} /> RETURN_TO_GRID
-            </button>
+        <div className="animate-in fade-in duration-700 relative z-10">
+            {/* Backdrop Header */}
+            <div className="absolute top-0 left-0 w-full h-[70vh] -z-10 overflow-hidden opacity-30 mask-image-gradient">
+                <img
+                    src={getImageUrl(movie.backdrop_path)}
+                    alt="Backdrop"
+                    className="w-full h-full object-cover blur-sm"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/60 to-black"></div>
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-12 items-start">
-                {/* Poster Section - REDUCED SIZE (md:max-w-xs) */}
-                <div className="relative group md:max-w-xs mx-auto md:mx-0 w-full">
-                    <div className="absolute -inset-1 bg-gradient-to-br from-accent to-cyan opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
-                    <img
-                        src={getImageUrl(movie.poster_path)}
-                        alt={movie.title}
-                        className="relative w-full border border-border glass-panel pointer-events-none"
-                    />
-                </div>
+            <div className="container mx-auto px-4 py-8 max-w-6xl">
+                <button
+                    onClick={onBack}
+                    className="mb-8 flex items-center gap-2 text-muted hover:text-cyan transition-colors font-display text-xl"
+                >
+                    <ArrowLeft size={20} /> RETURN_TO_GRID
+                </button>
 
-                {/* Info Section */}
-                <div className="flex flex-col justify-start pt-4">
-                    <h1 className="font-display text-6xl md:text-7xl tracking-wide text-white mb-2 relative" style={{ textShadow: '0 0 10px rgba(255, 69, 0, 0.5)' }}>
-                        {movie.title.toUpperCase()}
-                    </h1>
-
-                    <div className="flex items-center gap-6 text-muted mb-8 font-mono text-sm tracking-wider flex-wrap">
-                        <span className='flex items-center gap-2'><Calendar size={14} /> {movie.release_date?.split('-')[0]}</span>
-                        <span>•</span>
-                        <span>{movie.genres?.map(g => g.name).join(' / ')}</span>
-                        <span>•</span>
-                        <span className='flex items-center gap-2'><Clock size={14} /> {movie.runtime} MIN</span>
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-12 items-start">
+                    {/* Poster Section - REDUCED SIZE (md:max-w-xs) */}
+                    <div className="relative group md:max-w-xs mx-auto md:mx-0 w-full">
+                        <div className="absolute -inset-1 bg-gradient-to-br from-accent to-cyan opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
+                        <img
+                            src={getImageUrl(movie.poster_path)}
+                            alt={movie.title}
+                            className="relative w-full border border-border glass-panel pointer-events-none"
+                        />
                     </div>
 
-                    <div className="flex items-end gap-2 mb-8 font-display">
-                        <span className="text-accent text-3xl">RATING:</span>
-                        <span className="text-4xl text-cyan">{movie.vote_average?.toFixed(1)}</span>
-                        <span className="text-xl text-muted pb-1">/ 10</span>
-                    </div>
+                    {/* Info Section */}
+                    <div className="flex flex-col justify-start pt-4">
+                        <h1 className="font-display text-6xl md:text-7xl tracking-wide text-white mb-2 relative" style={{ textShadow: '0 0 10px rgba(255, 69, 0, 0.5)' }}>
+                            {movie.title.toUpperCase()}
+                        </h1>
 
-                    {/* Action Buttons */}
-                    <div className="flex flex-wrap gap-4 mb-8">
-                        {trailerKey && (
+                        <div className="flex items-center gap-6 text-muted mb-8 font-mono text-sm tracking-wider flex-wrap">
+                            <span className='flex items-center gap-2'><Calendar size={14} /> {movie.release_date?.split('-')[0]}</span>
+                            <span>•</span>
+                            <span>{movie.genres?.map(g => g.name).join(' / ')}</span>
+                            <span>•</span>
+                            <span className='flex items-center gap-2'><Clock size={14} /> {movie.runtime} MIN</span>
+                        </div>
+
+                        <div className="flex items-end gap-2 mb-8 font-display">
+                            <span className="text-accent text-3xl">RATING:</span>
+                            <span className="text-4xl text-cyan">{movie.vote_average?.toFixed(1)}</span>
+                            <span className="text-xl text-muted pb-1">/ 10</span>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-wrap gap-4 mb-8">
+                            {trailerKey && (
+                                <button
+                                    onClick={() => setShowTrailer(!showTrailer)}
+                                    className="px-8 py-3 border border-accent text-accent font-display text-xl hover:bg-accent hover:text-black hover:shadow-[0_0_20px_var(--accent)] transition-all duration-300 flex items-center gap-3 group"
+                                >
+                                    {showTrailer ? <X size={20} /> : <Play size={20} className="fill-current" />}
+                                    {showTrailer ? 'CLOSE_TRAILER' : 'PLAY_TRAILER'}
+                                </button>
+                            )}
+
                             <button
-                                onClick={() => setShowTrailer(!showTrailer)}
-                                className="px-8 py-3 border border-accent text-accent font-display text-xl hover:bg-accent hover:text-black hover:shadow-[0_0_20px_var(--accent)] transition-all duration-300 flex items-center gap-3 group"
+                                onClick={() => toggleWatchlist(movie)}
+                                className={`px-6 py-3 border font-display text-xl transition-all duration-300 flex items-center gap-3 ${inWatchlist
+                                    ? 'border-cyan text-cyan hover:bg-cyan hover:text-black'
+                                    : 'border-white/30 text-white hover:border-cyan hover:text-cyan'
+                                    }`}
                             >
-                                {showTrailer ? <X size={20} /> : <Play size={20} className="fill-current" />}
-                                {showTrailer ? 'CLOSE_TRAILER' : 'PLAY_TRAILER'}
+                                <Bookmark size={20} className={inWatchlist ? 'fill-current' : ''} />
+                                {inWatchlist ? 'IN_WATCHLIST' : 'ADD_TO_WATCHLIST'}
                             </button>
+
+                            <button
+                                onClick={() => toggleWatched(movie)}
+                                className={`px-6 py-3 border font-display text-xl transition-all duration-300 flex items-center gap-3 ${watched
+                                    ? 'border-green-500 text-green-500 hover:bg-green-500 hover:text-black'
+                                    : 'border-white/30 text-white hover:border-green-500 hover:text-green-500'
+                                    }`}
+                            >
+                                <Check size={20} />
+                                {watched ? 'WATCHED' : 'MARK_AS_WATCHED'}
+                            </button>
+
+                            <button
+                                onClick={() => toggleFavorite(movie)}
+                                className={`px-4 py-3 border font-display text-xl transition-all duration-300 flex items-center justify-center gap-3 ${favorited
+                                    ? 'border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-black'
+                                    : 'border-white/30 text-white hover:border-pink-500 hover:text-pink-500'
+                                    }`}
+                                title="Add to Favorites"
+                            >
+                                <Heart size={20} className={favorited ? 'fill-current' : ''} />
+                            </button>
+                        </div>
+
+                        {/* Watch Providers */}
+                        {watchProviders.length > 0 && (
+                            <div className="mb-8">
+                                <h3 className="font-display text-lg text-muted mb-3 flex items-center gap-2">
+                                    <span className="w-1 h-4 bg-accent"></span>
+                                    WHERE_TO_WATCH
+                                </h3>
+                                <div className="flex flex-wrap gap-4">
+                                    {watchProviders.map(provider => (
+                                        <div key={provider.provider_id} className="relative group" title={provider.provider_name}>
+                                            <img
+                                                src={getImageUrl(provider.logo_path)}
+                                                alt={provider.provider_name}
+                                                className="w-12 h-12 rounded-lg border border-white/10 group-hover:border-accent transition-colors cursor-pointer"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         )}
-
-                        <button
-                            onClick={() => toggleWatchlist(movie)}
-                            className={`px-6 py-3 border font-display text-xl transition-all duration-300 flex items-center gap-3 ${inWatchlist
-                                ? 'border-cyan text-cyan hover:bg-cyan hover:text-black'
-                                : 'border-white/30 text-white hover:border-cyan hover:text-cyan'
-                                }`}
-                        >
-                            <Bookmark size={20} className={inWatchlist ? 'fill-current' : ''} />
-                            {inWatchlist ? 'IN_WATCHLIST' : 'ADD_TO_WATCHLIST'}
-                        </button>
-
-                        <button
-                            onClick={() => toggleWatched(movie)}
-                            className={`px-6 py-3 border font-display text-xl transition-all duration-300 flex items-center gap-3 ${watched
-                                ? 'border-green-500 text-green-500 hover:bg-green-500 hover:text-black'
-                                : 'border-white/30 text-white hover:border-green-500 hover:text-green-500'
-                                }`}
-                        >
-                            <Check size={20} />
-                            {watched ? 'WATCHED' : 'MARK_AS_WATCHED'}
-                        </button>
                     </div>
 
                     {/* Embedded Trailer */}
@@ -194,6 +241,7 @@ const MovieDetail = ({ movieId, onBack, onSelectPerson }) => {
                 ⌁ ARCHIVED IN NEON MEMORY ⌁
             </div>
         </div>
+        </div >
     );
 };
 

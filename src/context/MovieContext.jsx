@@ -8,7 +8,11 @@ import {
     addToWatched as addToWatchedStorage,
     removeFromWatched as removeFromWatchedStorage,
     isWatched as isWatchedStorage,
-    getGenreStats
+    getGenreStats,
+    getFavorites,
+    addToFavorites as addToFavoritesStorage,
+    removeFromFavorites as removeFromFavoritesStorage,
+    isFavorite as isFavoriteStorage
 } from '../utils/localStorage';
 
 const MovieContext = createContext();
@@ -24,11 +28,13 @@ export const useMovieContext = () => {
 export const MovieProvider = ({ children }) => {
     const [watchlist, setWatchlist] = useState([]);
     const [watchedMovies, setWatchedMovies] = useState([]);
+    const [favorites, setFavorites] = useState([]);
 
     // Load data from localStorage on mount
     useEffect(() => {
         setWatchlist(getWatchlist());
         setWatchedMovies(getWatchedMovies());
+        setFavorites(getFavorites());
     }, []);
 
     const addToWatchlist = (movie) => {
@@ -67,6 +73,24 @@ export const MovieProvider = ({ children }) => {
         }
     };
 
+    const addToFavorites = (movie) => {
+        const updated = addToFavoritesStorage(movie);
+        setFavorites(updated);
+    };
+
+    const removeFromFavorites = (movieId) => {
+        const updated = removeFromFavoritesStorage(movieId);
+        setFavorites(updated);
+    };
+
+    const toggleFavorite = (movie) => {
+        if (isFavoriteStorage(movie.id)) {
+            removeFromFavorites(movie.id);
+        } else {
+            addToFavorites(movie);
+        }
+    };
+
     const value = {
         watchlist,
         watchedMovies,
@@ -77,8 +101,13 @@ export const MovieProvider = ({ children }) => {
         addToWatched,
         removeFromWatched,
         toggleWatched,
-        isWatched: isWatchedStorage,
-        getGenreStats
+        isMovieWatched: isWatchedStorage,
+        getGenreStats,
+        favorites,
+        addToFavorites,
+        removeFromFavorites,
+        toggleFavorite,
+        isFavorite: isFavoriteStorage
     };
 
     return (

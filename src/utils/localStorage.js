@@ -2,6 +2,7 @@
 
 const WATCHLIST_KEY = 'cinehub_watchlist';
 const WATCHED_KEY = 'cinehub_watched';
+const FAVORITES_KEY = 'cinehub_favorites';
 
 // Watchlist functions
 export const getWatchlist = () => {
@@ -45,6 +46,49 @@ export const removeFromWatchlist = (movieId) => {
 export const isInWatchlist = (movieId) => {
     const watchlist = getWatchlist();
     return watchlist.some(m => m.id === movieId);
+};
+
+// Favorites functions
+export const getFavorites = () => {
+    try {
+        const favorites = localStorage.getItem(FAVORITES_KEY);
+        return favorites ? JSON.parse(favorites) : [];
+    } catch (error) {
+        console.error('Error reading favorites:', error);
+        return [];
+    }
+};
+
+export const addToFavorites = (movie) => {
+    try {
+        const favorites = getFavorites();
+        if (favorites.some(m => m.id === movie.id)) {
+            return favorites;
+        }
+        const updatedFavorites = [...favorites, { ...movie, addedAt: new Date().toISOString() }];
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(updatedFavorites));
+        return updatedFavorites;
+    } catch (error) {
+        console.error('Error adding to favorites:', error);
+        return getFavorites();
+    }
+};
+
+export const removeFromFavorites = (movieId) => {
+    try {
+        const favorites = getFavorites();
+        const updatedFavorites = favorites.filter(m => m.id !== movieId);
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(updatedFavorites));
+        return updatedFavorites;
+    } catch (error) {
+        console.error('Error removing from favorites:', error);
+        return getFavorites();
+    }
+};
+
+export const isFavorite = (movieId) => {
+    const favorites = getFavorites();
+    return favorites.some(m => m.id === movieId);
 };
 
 // Watched movies (journal) functions
