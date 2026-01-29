@@ -1,35 +1,35 @@
-# 🎬 CINEHUB
+# 📼 CINEHUB
 
 <div align="center">
 
-![CineHub Logo](https://readme-typing-svg.herokuapp.com?font=VT323&size=60&duration=3000&pause=500&color=ff4500&center=true&vCenter=true&multiline=true&width=800&height=100&lines=CINEHUB;RETRO+FLUENT+MOVIE+DISCOVERY)
+![CineHub Logo](https://readme-typing-svg.herokuapp.com?font=VT323&size=60&duration=3000&pause=500&color=ff4500&center=true&vCenter=true&multiline=true&width=800&height=100&lines=CINEHUB;RETRO+VHS+MOVIE+DISCOVERY)
 
-[![Live Demo](https://img.shields.io/badge/🚀-LIVE_DEMO-ff4500?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEgMTNMMTQgOEwxIDEzVjFaTTEgMXYxMkgxNFYxSDFaIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+&logoColor=white)](https://sam97300.github.io/Cine-Hub/)
+[![Live Demo](https://img.shields.io/badge/�-LIVE_DEMO-ff4500?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEgMTNMMTQgOEwxIDEzVjFaTTEgMXYxMkgxNFYxSDFaIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+&logoColor=white)](https://sam97300.github.io/Cine-Hub/)
 [![GitHub stars](https://img.shields.io/github/stars/Sam97300/Cine-Hub?style=for-the-badge&logo=github&color=ffb700)](https://github.com/Sam97300/Cine-Hub)
 [![React](https://img.shields.io/badge/REACT-19.2.0-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/VITE-7.2.4-646cff?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev/)
 
 ---
 
-*A cyberpunk movie discovery experience with retro-fluent aesthetics*
+*A nostalgic movie discovery experience with retro VHS aesthetics*
 
 </div>
 
 ## 🌟 Overview
 
-CineHub is a cutting-edge movie discovery platform that brings together the nostalgia of retro computing with modern web technologies. Dive into a universe of cinema through a beautifully crafted interface featuring:
+CineHub is a vintage-inspired movie discovery platform that brings back the nostalgia of VHS era with modern web technologies. Dive into a universe of cinema through a beautifully crafted interface featuring:
 
 - 🎭 **Trending Movies Stream** - Real-time trending data from TMDB
 - 🔍 **Smart Search Autocomplete** - Instant movie discovery
 - 📊 **Detailed Analytics** - Movie statistics and insights
 - 👤 **Personal Profiles** - Track your watchlist and preferences
-- 🎨 **Cyberpunk UI** - Retro-fluent design with CRT effects
+- 📼 **Retro VHS UI** - Vintage design with tracking effects and artifacts
 
 ## 🚀 Live Experience
 
 > **🔗 [**LIVE DEMO**](https://sam97300.github.io/Cine-Hub/)**
 > 
-> Experience the full cyberpunk movie discovery journey
+> Experience the full retro VHS movie discovery journey
 
 ---
 
@@ -40,10 +40,10 @@ CineHub is a cutting-edge movie discovery platform that brings together the nost
 - **Advanced Search** - Intelligent autocomplete with instant results
 - **Detailed Views** - Comprehensive movie information including cast, crew, and statistics
 
-### 🎨 **Retro-Fluent Design**
-- **CRT Effects** - Authentic scanlines and grain effects
+### 📼 **Retro VHS Design**
+- **Tracking Effects** - Authentic VHS tracking lines and distortion
 - **Glass Morphism** - Modern glass panels with backdrop blur
-- **Cyberpunk Color Scheme** - Orange accent (#ff4500) with cyan highlights
+- **Vintage Color Scheme** - Orange accent (#ff4500) with warm highlights
 - **Smooth Animations** - Hover effects, transitions, and micro-interactions
 
 ### 📱 **Modern Architecture**
@@ -123,8 +123,8 @@ npm run deploy   # Deploy to GitHub Pages
 :root {
   --bg: #0b0b0b;        /* Deep black background */
   --panel: rgba(18, 18, 18, 0.6);  /* Glass panels */
-  --accent: #ff4500;    /* Cyberpunk orange */
-  --cyan: #ffb700;      /* Retro cyan */
+  --accent: #ff4500;    /* VHS orange */
+  --cyan: #ffb700;      /* Vintage yellow */
   --text: #eaeaea;      /* Light text */
   --muted: #9a9a9a;     /* Muted text */
 }
@@ -135,7 +135,7 @@ npm run deploy   # Deploy to GitHub Pages
 - **Body**: Inter (modern, clean sans-serif)
 
 ### Effects
-- **Scanlines**: Authentic CRT monitor effect
+- **Tracking Lines**: Authentic VHS tracking effect
 - **Grain**: Subtle noise texture
 - **Glass Morphism**: Backdrop blur with transparency
 - **Hover Animations**: Smooth transitions and transforms
@@ -146,7 +146,7 @@ npm run deploy   # Deploy to GitHub Pages
 
 <div align="center">
 
-![CineHub Interface](https://readme-typing-svg.herokuapp.com?font=VT323&size=20&duration=2000&pause=1000&color=ffb700&center=true&vCenter=true&lines=🎬+CYBERPUNK+MOVIE+DISCOVERY;🚀+RETRO+FLUENT+INTERFACE;✨+MODERN+WEB+TECHNOLOGIES)
+![CineHub Interface](https://readme-typing-svg.herokuapp.com?font=VT323&size=20&duration=2000&pause=1000&color=ffb700&center=true&vCenter=true&lines=📼+RETRO+VHS+MOVIE+DISCOVERY;🎬+VINTAGE+INTERFACE;✨+MODERN+WEB+TECHNOLOGIES)
 
 </div>
 
@@ -202,7 +202,7 @@ We welcome contributions! Here's how to get started:
 - Follow the existing code style and patterns
 - Ensure all animations are smooth and performant
 - Test responsive behavior on multiple devices
-- Maintain the cyberpunk aesthetic consistency
+- Maintain the retro VHS aesthetic consistency
 
 ---
 
@@ -223,7 +223,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-![CineHub](https://readme-typing-svg.herokuapp.com?font=VT323&size=24&duration=4000&pause=1000&color=ff4500&center=true&vCenter=true&lines=🎬+CINEHUB+🎬;RETRO+FLUENT+MOVIE+DISCOVERY;THANKS+FOR+VISITING!)
+![CineHub](https://readme-typing-svg.herokuapp.com?font=VT323&size=24&duration=4000&pause=1000&color=ff4500&center=true&vCenter=true&lines=📼+CINEHUB+📼;RETRO+VHS+MOVIE+DISCOVERY;THANKS+FOR+VISITING!)
 
 [![Back to top](https://img.shields.io/badge/BACK_TO_TOP-ff4500?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTggMTJMMTMgN0w4IDJMMyA3TDggMTJaIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+&logoColor=white)](#-cinehub)
 
